@@ -1,18 +1,20 @@
+require('dotenv').config();
+require('./models/User');
 const express = require('express');
 const bodyParser = require('body-parser');
+const requireToken = require('./midlleware/requireToken');
 const mongoose = require('mongoose');
 const app = express();
 const PORT = 3000;
-const { mongoUrl } = require('./keys')
 
 
 
-require('./models/User');
+
+const authRoutes = require('./routes/authRouter');
 app.use(bodyParser.json());
+app.use(authRoutes)
 
-
-
-mongoose.connect(mongoUrl, {
+mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true
 })
 
@@ -25,9 +27,9 @@ mongoose.connection.on('error', (err) => {
 })
 
 
-app.post('/', (req, res) => {
-    console.log(req.body)
-    res.send('Hello')
+
+app.get('/', requireToken, (req, res)=> {
+    res.send("your email is " + req.user.email)
 })
 
 app.listen(PORT, () => {
