@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import { 
   StyleSheet, 
   Text, 
@@ -8,10 +9,24 @@ import {
 } from 'react-native';
 import { Button } from 'react-native-paper';
 
-export default function HomeScreen() {
+export default function HomeScreen(props) {
+
+  const logout = async () => {
+    await AsyncStorage.removeItem("token")
+      .then(() => {
+        props.navigation.navigate("login")
+      })
+  }
+
   return (
       <SafeAreaView style={styles.container}>
-            <Text>your email is </Text>
+            <Text>your email is niga</Text>
+            <Button
+              mode="contained"
+              onPress={() => logout()}
+            >
+              logout
+            </Button>
       </SafeAreaView>
   );
 }

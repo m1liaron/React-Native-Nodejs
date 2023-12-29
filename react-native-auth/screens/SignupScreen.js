@@ -1,19 +1,41 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
+import { Button, TextInput } from 'react-native-paper';
 import { 
   StyleSheet, 
   Text, 
   View, 
   SafeAreaView,
-  TextInput,
   TouchableOpacity,
   KeyboardAvoidingView
 } from 'react-native';
-import { Button } from 'react-native-paper';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default function SignupScreen(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+  const sendCred = async (props) => {
+    fetch("http://10.0.2.2:3000/signup", {
+      method:"POST",
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({
+        "email": email,
+        "password": password
+      })
+    })
+      .then(res => res.json())
+      .then(async data => {
+        try {
+         await AsyncStorage.setItem('token', data.token)
+         props.navigation.navigate("home")
+        } catch (error) {
+          console.log(error)
+        }
+      })
+  }
 
   return (
   <SafeAreaView style={styles.container}>
@@ -24,19 +46,19 @@ export default function SignupScreen(props) {
           placeholder="Email"
           style={styles.input}
           value={email}
-        //   onChange={setEmail}
           onChangeText={(text) => setEmail(text)}
         />
         <TextInput
-          placeholder="Email"
+          placeholder="Password"
+          secureTextEntry={true}
           value={password}
-        //   onChange={setPassword}
           onChangeText={(text) => setPassword(text)}
           style={styles.input}
         />
         <Button
           mode='contained'
           style={styles.button}
+          onPress={() => sendCred()}
         >
           Register
         </Button>

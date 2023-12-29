@@ -18,18 +18,13 @@ mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true
 })
 
-mongoose.connection.on('connected', () => {
-    console.log('connected to mongo')
-})
-
 mongoose.connection.on('error', (err) => {
     console.log('this is error ', err)
 })
 
 
-
 app.get('/', requireToken, (req, res)=> {
-    res.send("your email is " + req.user.email)
+    res.send({email: req.user.email})
 })
 
 app.listen(PORT, () => {

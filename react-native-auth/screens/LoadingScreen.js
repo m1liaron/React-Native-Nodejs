@@ -1,4 +1,6 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect, useState } from 'react';
 import { 
   ActivityIndicator,
   SafeAreaView,
@@ -6,7 +8,21 @@ import {
 } from 'react-native';
 import { Button } from 'react-native-paper';
 
-export default function LoadingScreen() {
+export default function LoadingScreen(props) {
+
+  const detectLogin = async () => {
+    const token = await AsyncStorage.getItem('token');
+      if (token) {
+        props.navigation.navigate("home")
+      } else {
+        props.navigation.navigate("login")
+      }
+  }
+
+  useEffect(() => {
+    detectLogin()
+  }, [])
+
   return (
         <ActivityIndicator size="large" color="blue"/>
   );

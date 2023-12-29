@@ -1,4 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
+import React, { useState } from 'react';
 import { 
   StyleSheet, 
   Text, 
@@ -11,6 +12,31 @@ import {
 import { Button } from 'react-native-paper';
 
 export default function LoginScreen(props) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const sendCred = async (props) => {
+    fetch("http://10.0.2.2:3000/signin", {
+      method:"POST",
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({
+        "email": email,
+        "password": password
+      })
+    })
+      .then(res => res.json())
+      .then(async data => {
+        try {
+          await AsyncStorage.setItem('token', data.token)
+          props.navigation.navigate("home")
+      } catch (error) {
+          console.log(error)
+        }
+      })
+  }
+
   return (
   <SafeAreaView style={styles.container}>
     <KeyboardAvoidingView behavior='position'>
@@ -27,6 +53,7 @@ export default function LoginScreen(props) {
         <Button
           mode='contained'
           style={styles.button}
+          onPress={() => sendCred()}
         >
           Login
         </Button>
