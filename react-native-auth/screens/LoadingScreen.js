@@ -13,9 +13,9 @@ export default function LoadingScreen(props) {
   const detectLogin = async () => {
     const token = await AsyncStorage.getItem('token');
       if (token) {
-        props.navigation.navigate("home")
+        props.navigation.replace("home")
       } else {
-        props.navigation.navigate("login")
+        props.navigation.replace("login")
       }
   }
 

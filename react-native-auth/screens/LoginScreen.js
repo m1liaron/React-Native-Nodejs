@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
+import { Button } from 'react-native-paper';
 import { 
   StyleSheet, 
   Text, 
@@ -7,59 +8,65 @@ import {
   SafeAreaView,
   TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Alert
 } from 'react-native';
-import { Button } from 'react-native-paper';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default function LoginScreen(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const sendCred = async (props) => {
-    fetch("http://10.0.2.2:3000/signin", {
+  const sendCred = async (props)=>{
+    fetch("http://10.0.2.2:3000/signin",{
       method:"POST",
-      headers:{
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify({
-        "email": email,
-        "password": password
-      })
+      headers: {
+       'Content-Type': 'application/json'
+     },
+     body:JSON.stringify({
+       "email":email,
+       "password":password
+     })
     })
-      .then(res => res.json())
-      .then(async data => {
-        try {
-          await AsyncStorage.setItem('token', data.token)
-          props.navigation.navigate("home")
-      } catch (error) {
-          console.log(error)
-        }
-      })
-  }
+    .then(res=>res.json())
+    .then(async (data)=>{
+           try {
+             await AsyncStorage.setItem('token',data.token)
+             props.navigation.replace("home")
+           } catch (e) {
+             console.log("error hai",e)
+              Alert(e)
+           }
+    })
+ }
 
   return (
   <SafeAreaView style={styles.container}>
     <KeyboardAvoidingView behavior='position'>
-        <Text>Hello world!</Text>
         <Text style={{fontSize:30}}>Login</Text>
         <TextInput
           placeholder="Email"
           style={styles.input}
+          value={email}
+          onChangeText={(text) => setEmail(text)}
         />
         <TextInput
-          placeholder="Email"
+          placeholder="Password"
+          secureTextEntry={true}
+          value={password}
+          onChangeText={(text) => setPassword(text)}
           style={styles.input}
         />
         <Button
           mode='contained'
           style={styles.button}
-          onPress={() => sendCred()}
+          onPress={() => sendCred(props)}
         >
           Login
         </Button>
         <TouchableOpacity>
            <Text
-            onPress={() => props.navigation.navigate("signup")}
+            onPress={() => props.navigation.replace("signup")}
            >
             Don't have an account?
            </Text>

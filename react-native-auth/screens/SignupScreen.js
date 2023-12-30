@@ -15,32 +15,31 @@ export default function SignupScreen(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-  const sendCred = async (props) => {
-    fetch("http://10.0.2.2:3000/signup", {
-      method:"POST",
-      headers:{
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify({
-        "email": email,
-        "password": password
+    const sendCred= async (props)=>{
+      fetch("http://10.0.2.2:3000/signup",{
+        method:"POST",
+        headers: {
+         'Content-Type': 'application/json'
+       },
+       body:JSON.stringify({
+         "email":email,
+         "password":password
+       })
       })
-    })
-      .then(res => res.json())
-      .then(async data => {
-        try {
-         await AsyncStorage.setItem('token', data.token)
-         props.navigation.navigate("home")
-        } catch (error) {
-          console.log(error)
-        }
+      .then(res=>res.json())
+      .then(async (data)=>{
+             try {
+               await AsyncStorage.setItem('token',data.token)
+               props.navigation.replace("home")
+             } catch (e) {
+               console.log("error hai",e)
+             }
       })
-  }
+   }
 
   return (
   <SafeAreaView style={styles.container}>
     <KeyboardAvoidingView behavior='position'>
-        <Text>Hello world!</Text>
         <Text style={{fontSize:30}}>Create New Account</Text>
         <TextInput
           placeholder="Email"
@@ -58,13 +57,13 @@ export default function SignupScreen(props) {
         <Button
           mode='contained'
           style={styles.button}
-          onPress={() => sendCred()}
+          onPress={() => sendCred(props)}
         >
           Register
         </Button>
         <TouchableOpacity>
           <Text
-            onPress={() => props.navigation.navigate("login")}
+            onPress={() => props.navigation.replace("login")}
           >
             Already have an account?
           </Text>

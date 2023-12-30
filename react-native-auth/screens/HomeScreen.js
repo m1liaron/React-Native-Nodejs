@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import { useEffect, useState } from 'react';
 import { 
   StyleSheet, 
   Text, 
@@ -10,20 +11,39 @@ import {
 import { Button } from 'react-native-paper';
 
 export default function HomeScreen(props) {
+  const [email, setEmail] = useState("loading...")
+  
+  const Boiler = async ()=>{
+    const token = await AsyncStorage.getItem("token")
+        fetch('http://10.0.2.2:3000/',{
+        headers:new Headers({
+          Authorization:"Bearer "+token
+        })
+        }).then(res=>res.json())
+        .then(data=>{
+          console.log(data)
+          setEmail(data.email)
+        } 
+      )
+ }
+useEffect(()=>{
+ Boiler()
+},[])
 
-  const logout = async () => {
+
+  const logout = async (props) => {
     await AsyncStorage.removeItem("token")
       .then(() => {
-        props.navigation.navigate("login")
+        props.navigation.replace("login")
       })
   }
 
   return (
       <SafeAreaView style={styles.container}>
-            <Text>your email is niga</Text>
+            <Text>your email is {email}</Text>
             <Button
               mode="contained"
-              onPress={() => logout()}
+              onPress={() => logout(props)}
             >
               logout
             </Button>

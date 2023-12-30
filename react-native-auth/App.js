@@ -10,8 +10,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [isloggedin, setLogged] = useState(null);
-
   const detectLogin = async () => {
     const token = await AsyncStorage.getItem('token');
       if (token) {
@@ -27,17 +25,15 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator headerMode="none">
-        {isloggedin === null ? (
+      <Stack.Navigator headerMode="none"
+      screenOptions={{
+        headerShown: false
+      }}
+      >
           <Stack.Screen name="loading" component={LoadingScreen} />
-        ) : isloggedin ? (
           <Stack.Screen name="home" component={HomeScreen} />
-        ) : (
-          <>
-            <Stack.Screen name="signup" component={SignupScreen} />
-            <Stack.Screen name="login" component={LoginScreen} />
-          </>
-        )}
+          <Stack.Screen name="signup" component={SignupScreen} />
+          <Stack.Screen name="login" component={LoginScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
