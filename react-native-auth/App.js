@@ -5,24 +5,12 @@ import HomeScreen from './screens/HomeScreen';
 import SignupScreen from './screens/SignupScreen';
 import LoginScreen from './screens/LoginScreen';
 import LoadingScreen from './screens/LoadingScreen';
+import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const detectLogin = async () => {
-    const token = await AsyncStorage.getItem('token');
-      if (token) {
-        setLogged(true);
-      } else {
-        setLogged(false);
-      }
-  }
-
-  useEffect(() => {
-    detectLogin()
-  }, []);
-
   return (
     <NavigationContainer>
       <Stack.Navigator headerMode="none"
@@ -34,6 +22,7 @@ export default function App() {
           <Stack.Screen name="home" component={HomeScreen} />
           <Stack.Screen name="signup" component={SignupScreen} />
           <Stack.Screen name="login" component={LoginScreen} />
+          <Stack.Screen name="forgot-password" component={ForgotPasswordScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

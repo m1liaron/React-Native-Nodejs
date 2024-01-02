@@ -39,7 +39,6 @@ export default function SignupScreen(props) {
 
   return (
   <SafeAreaView style={styles.container}>
-    <KeyboardAvoidingView behavior='position'>
         <Text style={{fontSize:30}}>Create New Account</Text>
         <TextInput
           placeholder="Email"
@@ -69,7 +68,6 @@ export default function SignupScreen(props) {
           </Text>
         </TouchableOpacity>
         <StatusBar style="auto" />
-    </KeyboardAvoidingView>
       </SafeAreaView>
   );
 }

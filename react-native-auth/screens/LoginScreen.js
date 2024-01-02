@@ -1,12 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Button } from 'react-native-paper';
+import { Button, TextInput } from 'react-native-paper';
+
 import { 
   StyleSheet, 
   Text, 
   View, 
   SafeAreaView,
-  TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
   Alert
@@ -38,11 +38,10 @@ export default function LoginScreen(props) {
               Alert(e)
            }
     })
- }
+  }
 
   return (
-  <SafeAreaView style={styles.container}>
-    <KeyboardAvoidingView behavior='position'>
+      <SafeAreaView SafeAreaView style={styles.container}>
         <Text style={{fontSize:30}}>Login</Text>
         <TextInput
           placeholder="Email"
@@ -71,8 +70,14 @@ export default function LoginScreen(props) {
             Don't have an account?
            </Text>
         </TouchableOpacity>
+        <TouchableOpacity>
+           <Text
+            onPress={() => props.navigation.replace("forgot-password")}
+           >
+            Forgot Password ?
+           </Text>
+        </TouchableOpacity>
         <StatusBar style="auto" />
-    </KeyboardAvoidingView>
       </SafeAreaView>
   );
 }
