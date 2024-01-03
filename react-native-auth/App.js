@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './screens/HomeScreen';
@@ -6,7 +5,7 @@ import SignupScreen from './screens/SignupScreen';
 import LoginScreen from './screens/LoginScreen';
 import LoadingScreen from './screens/LoadingScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
-import AsyncStorage from '@react-native-community/async-storage';
+import ResetPasswordScreen from './screens/ResetPasswordScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +22,7 @@ export default function App() {
           <Stack.Screen name="signup" component={SignupScreen} />
           <Stack.Screen name="login" component={LoginScreen} />
           <Stack.Screen name="forgot-password" component={ForgotPasswordScreen} />
+          <Stack.Screen name="reset-password" component={ResetPasswordScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
