@@ -1,7 +1,8 @@
+import React, { useContext } from 'react'
 import { StatusBar } from 'expo-status-bar';
-import React from 'react'
 import { Button, TextInput } from 'react-native-paper';
 import { useRoute } from '@react-navigation/native';
+import { useAuth, AuthContext } from '../AuthContext';
 
 import { 
     StyleSheet, 
@@ -15,16 +16,21 @@ import {
 import { useState } from 'react';
 
 const ResetPasswordScreen = (props) => {
+    const { forgotEmail } = useAuth()
     const [password, setPassword] = useState("");
+    const [verifyCode, setVerifyCode] = useState("");
 
     const hadleResetPassword = async (props)=>{
+      console.log("reset")
         fetch("http://10.0.2.2:3000/reset-password",{
           method:"POST",
           headers: {
            'Content-Type': 'application/json'
          },
          body:JSON.stringify({
-           
+           email: forgotEmail,
+           password: password,
+           verificationCode: verifyCode
          })
         })
         .then(res=>res.json())
@@ -32,6 +38,7 @@ const ResetPasswordScreen = (props) => {
                try {
                  console.log(data)
                  props.navigation.replace("home")
+                 setPassword("")
                } catch (e) {
                  console.log("error hai",e)
                   Alert(e)
@@ -42,6 +49,12 @@ const ResetPasswordScreen = (props) => {
   return (
     <SafeAreaView SafeAreaView style={styles.container}>
         <Text style={{fontSize:30}}>Reset Password</Text>
+        <TextInput
+          placeholder="Verification Code"
+          style={styles.input}
+          value={verifyCode}
+          onChangeText={(text) => setVerifyCode(text)}
+        />
         <TextInput
           placeholder="Password"
           style={styles.input}
@@ -55,6 +68,13 @@ const ResetPasswordScreen = (props) => {
         >
           Reset Password
         </Button>
+        <TouchableOpacity>
+           <Text
+            onPress={() => props.navigation.replace("login")}
+           >
+            Back to Login
+           </Text>
+        </TouchableOpacity>
         <StatusBar style="auto" />
       </SafeAreaView>
   )

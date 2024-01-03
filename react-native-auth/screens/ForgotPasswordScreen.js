@@ -1,6 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import { Button, TextInput } from 'react-native-paper';
+import { AuthContext, useAuth } from '../AuthContext';
+
 
 import { 
     StyleSheet, 
@@ -11,9 +13,9 @@ import {
     KeyboardAvoidingView,
     Alert
   } from 'react-native';
-import { useState } from 'react';
 
 const ForgotPasswordScreen = (props) => {
+    const { setForgotEmail } = useAuth()
     const [email, setEmail] = useState("");
 
     const sendCred = async (props)=>{
@@ -29,7 +31,8 @@ const ForgotPasswordScreen = (props) => {
         .then(res=>res.json())
         .then(async (data)=>{
                try {
-                 console.log(data)
+                  console.log(data)
+                  setForgotEmail(email);
                   props.navigation.replace("reset-password")
                } catch (e) {
                  console.log("error hai",e)

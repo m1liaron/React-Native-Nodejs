@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+
 const userSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -9,6 +10,14 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: [true, 'Please provide password'],
+    },
+    resettoken: {
+        type: String,
+        required: false
+    },
+    resettokenExpiration: {
+        type: Date,
+        required: false
     }
 })
 
