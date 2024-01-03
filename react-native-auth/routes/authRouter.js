@@ -5,8 +5,7 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 const User = mongoose.model('User')
 const nodemailer = require('nodemailer');
-const Joi = require('joi');
-const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 
 router.post('/signup', async (req, res) => {
   const { email, password } = req.body;
@@ -123,7 +122,6 @@ router.post('/forgot-password', async (req, res) => {
     };
 
     await transporter.sendMail(message);
-    console.log(resetToken)
 
     res.send({success: true, message:'Email sent'});
   } catch (error) {
@@ -137,24 +135,26 @@ router.post('/reset-password', async (req, res) => {
   try {
     const { email, password, verificationCode } = req.body;
     const user = await User.findOne({ email });
-
+    
     if (!user) {
       return res.status(400).send('User not found.');
     }
-
+    
     if (!user || user.resettoken !== verificationCode) {
       return res.status(400).send({ success: false });
     }
-
-    const hashedPassword = await user.comparePassword(password);
+    
+    const hashedPassword = await bcrypt.hash(password, 10);
     // Update the password and reset token fields
+
     user.password = hashedPassword;
     user.resettoken = '';
     user.resettokenExpiration = null;
 
+    
     await user.save();
-    console.log("Reset Password!!!✅✅✅✅✅✅");
-    return res.status(200).send({ success: true });
+    const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET)
+    res.send({success: true, token})
   } catch (error) {
     console.error(error);
     return res.status(500).send({ success: false, message: 'An error occurred. Please try again later.' });

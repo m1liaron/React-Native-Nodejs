@@ -31,7 +31,6 @@ const ForgotPasswordScreen = (props) => {
         .then(res=>res.json())
         .then(async (data)=>{
                try {
-                  console.log(data)
                   setForgotEmail(email);
                   props.navigation.replace("reset-password")
                } catch (e) {

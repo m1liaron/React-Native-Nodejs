@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Button, TextInput } from 'react-native-paper';
 import { useRoute } from '@react-navigation/native';
 import { useAuth, AuthContext } from '../AuthContext';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import { 
     StyleSheet, 
@@ -20,8 +21,7 @@ const ResetPasswordScreen = (props) => {
     const [password, setPassword] = useState("");
     const [verifyCode, setVerifyCode] = useState("");
 
-    const hadleResetPassword = async (props)=>{
-      console.log("reset")
+    const handleResetPassword = async(props)=>{
         fetch("http://10.0.2.2:3000/reset-password",{
           method:"POST",
           headers: {
@@ -36,9 +36,9 @@ const ResetPasswordScreen = (props) => {
         .then(res=>res.json())
         .then(async (data)=>{
                try {
-                 console.log(data)
-                 props.navigation.replace("home")
-                 setPassword("")
+                  await AsyncStorage.setItem('token',data.token)
+                  props.navigation.replace("home")
+                  setPassword("")
                } catch (e) {
                  console.log("error hai",e)
                   Alert(e)
@@ -64,7 +64,7 @@ const ResetPasswordScreen = (props) => {
         <Button
           mode='contained'
           style={styles.button}
-          onPress={() => hadleResetPassword(props)}
+          onPress={() => handleResetPassword(props)}
         >
           Reset Password
         </Button>
