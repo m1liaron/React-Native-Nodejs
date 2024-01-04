@@ -12,13 +12,6 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
-// Google Signup Import
-import {
-  GoogleOneTapSignIn,
-  statusCodes,
-  OneTapUser,
-} from '@react-native-google-signin/google-signin';
-
 export default function SignupScreen(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
