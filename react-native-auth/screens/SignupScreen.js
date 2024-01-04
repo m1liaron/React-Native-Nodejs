@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import { Button, TextInput } from 'react-native-paper';
+import { Link } from '@react-navigation/native';
 import { 
   StyleSheet, 
   Text, 
@@ -10,6 +11,13 @@ import {
   KeyboardAvoidingView
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+
+// Google Signup Import
+import {
+  GoogleOneTapSignIn,
+  statusCodes,
+  OneTapUser,
+} from '@react-native-google-signin/google-signin';
 
 export default function SignupScreen(props) {
     const [email, setEmail] = useState("");
@@ -66,6 +74,9 @@ export default function SignupScreen(props) {
           >
             Already have an account?
           </Text>
+          <Link to="/auth/google">
+            Google Registration
+          </Link>
         </TouchableOpacity>
         <StatusBar style="auto" />
       </SafeAreaView>

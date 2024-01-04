@@ -56,6 +56,7 @@ router.post('/signin', async(req, res) => {
     const {email, password} = req.body;
 
     if(!email || !password){
+        console.log("Wrong password or email!")
         return res.status(422).send("please provide email and password")
     }
     const user = await User.findOne({email})
