@@ -162,4 +162,12 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
+// !ChatGPT
+
+// router.post('/auth/google/', async (req, res) =>{
+//   const user = await User.findOne({email})
+//   const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET)
+//   res.send({token})
+// })
+
 module.exports = router;

@@ -1,0 +1,19 @@
+{
+    "cli": {
+      "version": ">= 0.43.0"
+    },
+    "build": {
+      "base": {
+      },
+      "development": {
+        "extends": "base",
+      },
+      "production": {
+        "extends": "base",
+      },
+      "preview": {
+        "extends": "base",
+      }
+    }
+  }
+  

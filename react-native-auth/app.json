@@ -4,6 +4,7 @@
     "slug": "react-native-auth",
     "version": "1.0.0",
     "orientation": "portrait",
+    "schema":"authentication",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -21,10 +22,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.reactnativeauth"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "31294db7-685f-42a5-9641-dbcd2a5ee82f"
+      }
     }
   }
 }
