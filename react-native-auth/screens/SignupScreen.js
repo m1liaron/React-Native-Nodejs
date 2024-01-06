@@ -1,28 +1,28 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { Button, TextInput } from 'react-native-paper';
+import { TextInput, Button } from 'react-native-paper';
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
 
 import { GOOGLE_CLIENT_ID, GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from "@env"
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
-import { GoogleSignin, GoogleSigninButton } from 'expo-auth-session';
 
 import AsyncStorage from '@react-native-community/async-storage';
 
 WebBrowser.maybeCompleteAuthSession();
 
+const config = {
+  androidClientId: GOOGLE_ANDROID_CLIENT_ID,
+  iosClientId: GOOGLE_IOS_CLIENT_ID,
+  webClientId: GOOGLE_CLIENT_ID,
+};
+
+
 export default function SignupScreen(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [userInfo, setUserInfo] = useState(null);
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    webClientId: GOOGLE_CLIENT_ID,
-    androidClientId: GOOGLE_ANDROID_CLIENT_ID,
-    iosClientId: GOOGLE_IOS_CLIENT_ID,
-    redirectUri: 'https://localhost:19006',
-    clientSecret: "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"
-  });
+  const [request, response, promptAsync] = Google.useAuthRequest(config);
 
   console.log(request)
 
@@ -43,18 +43,28 @@ export default function SignupScreen(props) {
   }, [response]);
 
   const getUserInfo = async (token) => {
-    if(!token) return;
-    try{
-      const respone = await fetch(
+    //absent token
+    if (!token) return;
+    //present token
+    try {
+      const response = await fetch(
         "https://www.googleapis.com/userinfo/v2/me",
         {
-            headers: { 'Authorization': 'Bearer ' + token },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-    } catch(error){
-
+      const user = await response.json();
+      //store user information  in Asyncstorage
+      await AsyncStorage.setItem("user", JSON.stringify(user));
+      setUserInfo(user);
+    } catch (error) {
+      console.error(
+        "Failed to fetch user data:",
+        response.status,
+        response.statusText
+      );
     }
-  }
+  };
 
   const sendCred = async (props) => {
     fetch('http://10.0.2.2:3000/signup', {
@@ -100,13 +110,10 @@ export default function SignupScreen(props) {
       <TouchableOpacity onPress={() => props.navigation.replace('login')}>
         <Text>Already have an account?</Text>
       </TouchableOpacity>
+      
       <Text>{JSON.stringify(userInfo)}</Text>
-      <Button  
-        mode="contained" 
-        style={styles.button}
-        onPress={promptAsync} 
-        >
-          Sign in with Google
+      <Button mode="contained" style={styles.button} onPress={()=>{promptAsync()}}>
+      Sign in with google
       </Button>
       <StatusBar style="auto" />
     </SafeAreaView>

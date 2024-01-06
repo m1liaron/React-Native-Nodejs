@@ -26,6 +26,13 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "schema":"Life-List",
+    "extra": {
+      "eas": {
+        "projectId": "31294db7-685f-42a5-9641-dbcd2a5ee82f"
+      }
+    },
+    "owner": "m1liaron"
   }
 }
