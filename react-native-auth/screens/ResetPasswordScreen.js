@@ -3,7 +3,6 @@ import { StatusBar } from 'expo-status-bar';
 import { Button, TextInput } from 'react-native-paper';
 import { useRoute } from '@react-navigation/native';
 import { useAuth, AuthContext } from '../AuthContext';
-import AsyncStorage from '@react-native-community/async-storage';
 
 import { 
     StyleSheet, 
@@ -15,6 +14,8 @@ import {
     Alert
   } from 'react-native';
 import { useState } from 'react';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const ResetPasswordScreen = (props) => {
     const { forgotEmail } = useAuth()

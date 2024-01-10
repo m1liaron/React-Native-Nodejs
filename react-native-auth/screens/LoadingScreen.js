@@ -1,12 +1,13 @@
-import AsyncStorage from '@react-native-community/async-storage';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { 
   ActivityIndicator,
   SafeAreaView,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import { Button } from 'react-native-paper';
+
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoadingScreen(props) {
 

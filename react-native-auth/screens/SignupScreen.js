@@ -1,70 +1,52 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { TextInput, Button } from 'react-native-paper';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Alert, Image } from 'react-native';
 
-import { GOOGLE_CLIENT_ID, GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from "@env"
-import * as WebBrowser from 'expo-web-browser';
-import * as Google from 'expo-auth-session/providers/google';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import AsyncStorage from '@react-native-community/async-storage';
 
-WebBrowser.maybeCompleteAuthSession();
-
-const config = {
-  androidClientId: GOOGLE_ANDROID_CLIENT_ID,
-  iosClientId: GOOGLE_IOS_CLIENT_ID,
-  webClientId: GOOGLE_CLIENT_ID,
-};
-
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes
+} from '@react-native-google-signin/google-signin'
 
 export default function SignupScreen(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [userInfo, setUserInfo] = useState(null);
-  const [request, response, promptAsync] = Google.useAuthRequest(config);
 
-  console.log(request)
+  const [error, setError] = useState();
+  const [userInfo, setUserInfo] = useState();
 
-
-  async function handleSignInWithGoogle(){
-    const user = await AsyncStorage.getItem("@user");
-    if(!user){
-      if(response?.type === "success"){
-        await getUserInfo(response.authentication.accessToken)
-      }
-    } else {
-      setUserInfo(JSON.parse(user));
-    }
+  const configureGoogleSignin = () => {
+    GoogleSignin.configure({
+      androidClientId: "13567678850-g0jo32j8dhj66e2nhj2l9o5sqqv3688u.apps.googleusercontent.com",
+      iosClientId: "13567678850-r5frkd4h1f59n8pv4tn37a45tdsfm007.apps.googleusercontent.com",
+      webClientId: "13567678850-oo19askh0so2hrs0rcl887ho1u4erhtj.apps.googleusercontent.com",
+    });
   }
 
   useEffect(() => {
-    handleSignInWithGoogle()
-  }, [response]);
+    configureGoogleSignin()
+  });
 
-  const getUserInfo = async (token) => {
-    //absent token
-    if (!token) return;
-    //present token
+  const signIn = async () => {
     try {
-      const response = await fetch(
-        "https://www.googleapis.com/userinfo/v2/me",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      const user = await response.json();
-      //store user information  in Asyncstorage
-      await AsyncStorage.setItem("user", JSON.stringify(user));
-      setUserInfo(user);
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      setUserInfo(userInfo);
+      setError();
     } catch (error) {
-      console.error(
-        "Failed to fetch user data:",
-        response.status,
-        response.statusText
-      );
+      setError(error)
     }
   };
+
+  const logout = async () => {
+    setUserInfo(undefined);
+    GoogleSignin.revokeAccess()
+    GoogleSignin.signOut()
+  }
 
   const sendCred = async (props) => {
     fetch('http://10.0.2.2:3000/signup', {
@@ -80,7 +62,7 @@ export default function SignupScreen(props) {
       .then((res) => res.json())
       .then(async (data) => {
         try {
-          await AsyncStorage.setItem('token', data.token);
+          // await AsyncStorage.setItem('token', data.token);
           props.navigation.replace('home');
         } catch (e) {
           console.log('error hai', e);
@@ -111,10 +93,25 @@ export default function SignupScreen(props) {
         <Text>Already have an account?</Text>
       </TouchableOpacity>
       
-      <Text>{JSON.stringify(userInfo)}</Text>
-      <Button mode="contained" style={styles.button} onPress={()=>{promptAsync()}}>
-      Sign in with google
-      </Button>
+      <Text>{JSON.stringify(error)}</Text>
+      {userInfo ? (
+        <View>
+        <Button title="Logout" onPress={logout} />
+        <Image
+          style={styles.profileImage}
+          source={{ uri: userInfo.user.photo }}
+        /> 
+        <Text>{userInfo.user.givenName}</Text>
+        <Text>{userInfo.user.familyName}</Text>
+      </View>
+      ) : (
+        <GoogleSigninButton 
+          size={GoogleSigninButton.Size.Standard} 
+          color={GoogleSigninButton.Color.Dark} 
+          onPress={signIn}
+        />
+      )}
+      
       <StatusBar style="auto" />
     </SafeAreaView>
   );
@@ -137,5 +134,11 @@ const styles = StyleSheet.create({
   button: {
     width: '95%',
     margin: 18,
+  },
+  profileImage: {
+    width: 100, 
+    height: 100, 
+    borderRadius: 50,
+    marginTop: 10
   },
 });

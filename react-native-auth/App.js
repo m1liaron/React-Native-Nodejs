@@ -16,17 +16,17 @@ export default function App() {
     <AuthProvider>
       <NavigationContainer>
         <Stack.Navigator headerMode="none"
-        screenOptions={{
-          headerShown: false
-        }}
+          screenOptions={{
+            headerShown: false
+          }}
         >
-            <Stack.Screen name="loading" component={LoadingScreen} />
-            <Stack.Screen name="home" component={HomeScreen} />
-            <Stack.Screen name="signup" component={SignupScreen} />
-            <Stack.Screen name="login" component={LoginScreen} />
-            <Stack.Screen name="forgot-password" component={ForgotPasswordScreen} />
-            <Stack.Screen name="reset-password" component={ResetPasswordScreen} />
-        </Stack.Navigator>
+          {/* <Stack.Screen name="loading" component={LoadingScreen} /> */}
+          {/* <Stack.Screen name="home" component={HomeScreen} /> */}
+          <Stack.Screen name="signup" component={SignupScreen} />
+          <Stack.Screen name="login" component={LoginScreen} />
+          <Stack.Screen name="forgot-password" component={ForgotPasswordScreen} />
+          <Stack.Screen name="reset-password" component={ResetPasswordScreen} />
+      </Stack.Navigator>
       </NavigationContainer>
     </AuthProvider>
   );

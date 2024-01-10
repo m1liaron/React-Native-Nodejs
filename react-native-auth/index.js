@@ -19,9 +19,9 @@ const PORT = 3000;
 // }
 
 
-app.use(session({ secret: 'cats', resave: false, saveUninitialized: true }));
-app.use(passport.initialize());  
-app.use(passport.session());
+// app.use(session({ secret: 'cats', resave: false, saveUninitialized: true }));
+// app.use(passport.initialize());  
+// app.use(passport.session());
 
 
 // app.get('/', (req, res)=> {
