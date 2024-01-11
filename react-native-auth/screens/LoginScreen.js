@@ -32,7 +32,7 @@ export default function LoginScreen(props) {
     .then(res=>res.json())
     .then(async (data)=>{
            try {
-             await AsyncStorage.setItem('token',data.token)
+            //  await AsyncStorage.setItem('token',data.token)
              props.navigation.replace("home")
            } catch (e) {
              console.log("error hai",e)

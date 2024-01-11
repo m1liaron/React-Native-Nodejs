@@ -1,16 +1,23 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { TextInput, Button } from 'react-native-paper';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Alert, Image } from 'react-native';
-
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { 
+  StyleSheet, 
+  Text, 
+  View, 
+  SafeAreaView, 
+  TouchableOpacity, 
+  Alert, 
+  Image, 
+  Platform  
+} from 'react-native';
 
 import {
   GoogleSignin,
   GoogleSigninButton,
-  statusCodes
+  statusCodes,
 } from '@react-native-google-signin/google-signin'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SignupScreen(props) {
   const [email, setEmail] = useState('');
@@ -28,18 +35,18 @@ export default function SignupScreen(props) {
   }
 
   useEffect(() => {
-    configureGoogleSignin()
-  });
+      configureGoogleSignin();
+  }, []);
 
   const signIn = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      setUserInfo(userInfo);
-      setError();
-    } catch (error) {
-      setError(error)
-    }
+      try {
+        await GoogleSignin.hasPlayServices();
+        const userInfo = await GoogleSignin.signIn();
+        setUserInfo(userInfo);
+        setError();
+      } catch (error) {
+        setError(error);
+      }
   };
 
   const logout = async () => {
@@ -95,14 +102,16 @@ export default function SignupScreen(props) {
       
       <Text>{JSON.stringify(error)}</Text>
       {userInfo ? (
-        <View>
-        <Button title="Logout" onPress={logout} />
-        <Image
-          style={styles.profileImage}
-          source={{ uri: userInfo.user.photo }}
-        /> 
-        <Text>{userInfo.user.givenName}</Text>
-        <Text>{userInfo.user.familyName}</Text>
+       <View>
+          <Button mode="contained" style={styles.button} onPress={logout}>
+            Logout
+          </Button>
+          <Image
+            style={styles.profileImage}
+            source={{ uri: userInfo.user.photo }}
+          /> 
+          <Text>{userInfo.user.givenName}</Text>
+          <Text>{userInfo.user.familyName}</Text>
       </View>
       ) : (
         <GoogleSigninButton 
@@ -110,6 +119,9 @@ export default function SignupScreen(props) {
           color={GoogleSigninButton.Color.Dark} 
           onPress={signIn}
         />
+      // <Button mode="contained" style={styles.button} onPress={signIn}>
+      //   Sign up with google
+      // </Button>
       )}
       
       <StatusBar style="auto" />
@@ -140,5 +152,5 @@ const styles = StyleSheet.create({
     height: 100, 
     borderRadius: 50,
     marginTop: 10
-  },
+  }
 });

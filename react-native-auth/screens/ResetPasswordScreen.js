@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { StatusBar } from 'expo-status-bar';
 import { Button, TextInput } from 'react-native-paper';
 import { useRoute } from '@react-navigation/native';
@@ -13,7 +13,6 @@ import {
     KeyboardAvoidingView,
     Alert
   } from 'react-native';
-import { useState } from 'react';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -37,7 +36,7 @@ const ResetPasswordScreen = (props) => {
         .then(res=>res.json())
         .then(async (data)=>{
                try {
-                  await AsyncStorage.setItem('token',data.token)
+                  // await AsyncStorage.setItem('token',data.token)
                   props.navigation.replace("home")
                   setPassword("")
                } catch (e) {

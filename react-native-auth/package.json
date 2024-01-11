@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/webpack-config": "^19.0.0",
+    "@react-native-async-storage/async-storage": "^1.21.0",
     "@react-native-google-signin/google-signin": "^11.0.0",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
@@ -43,8 +44,7 @@
     "react-native-screens": "~3.22.0",
     "react-native-vector-icons": "^10.0.3",
     "react-native-web": "~0.19.6",
-    "uninstall": "^0.0.0",
-    "@react-native-async-storage/async-storage": "1.18.2"
+    "uninstall": "^0.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
