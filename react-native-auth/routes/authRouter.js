@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const User = mongoose.model('User')
+const GoogleUser = mongoose.model('GoogleUser')
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 
@@ -15,36 +16,7 @@ router.post('/signup', async (req, res) => {
       await user.save();
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
-      let testAccount = await nodemailer.createTestAccount();
-
-      const transporter = nodemailer.createTransport({
-          host: "smtp.ethereal.email",
-          port: 587,
-          secure: false,
-          auth: {
-              user: testAccount.user,
-              pass: testAccount.pass,
-          },
-      });
-
-      let message = {
-          from: '"Maddison Foo Koch 👻" <maddison53@ethereal.email>',
-          to: "bar@example.com, baz@example.com",
-          subject: "Hello ✔",
-          text: "Successful Register with us.",
-          html: "<b>Successful Register with us.</b>",
-      };
-
-      // Send the email
-      let info = await transporter.sendMail(message);
-
-      return res.status(201).json({
-          msg: "You should receive an email",
-          info: info.messageId,
-          preview: nodemailer.getTestMessageUrl(info),
-          token: token, // Send the token in the response
-      });
-
+      res.status(201).send(token)
   } catch (error) {
       console.error(error);
       return res.status(402).send(error.message);
@@ -117,7 +89,7 @@ router.post('/forgot-password', async (req, res) => {
       to: user.email,
       subject: 'Password Reset Request',
       text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
-        Please click on the following link, or paste this into your browser to complete the process:\n\n
+        Please enter the code to input:\n\n
         ${resetToken}\n\n
         If you did not request this, please ignore this email and your password will remain unchanged.\n`,
     };
@@ -161,5 +133,52 @@ router.post('/reset-password', async (req, res) => {
     return res.status(500).send({ success: false, message: 'An error occurred. Please try again later.' });
   }
 });
+
+router.post('/google-signup', async (req, res) => {
+  const { idToken  } = req.body;
+  const {googleEmail, familyName, givenName, name, photo} = req.body.user
+
+  console.log('Received Google Email:', googleEmail);
+
+  try {
+      const user = new GoogleUser({ googleEmail });
+      
+      if (!user) {
+        // Create a new user for Google Sign-Up
+        const newUser = new GoogleUser({ idToken, googleEmail, displayName: name, photo });
+        await newUser.save();
+      }
+
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+      
+      res.status(201).send(token)
+  } catch (error) {
+      console.error(error);
+      return res.status(402).send(error.message);
+  }
+});
+
+// ! google
+
+// const isLoggedIn = (req, res, next) => {
+//   if (req.isAuthenticated()) {
+//     return next();
+//   } else {
+//     res.sendStatus(401);
+//   }
+// };
+
+// router.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
+
+// router.get(
+//   '/auth/google/callback',
+//   passport.authenticate('google', {
+//     successRedirect: '/protected',
+//     failureRedirect: '/auth/failure',
+//   }),
+//   (req, res) => {
+//     console.log(req.user); // Log the user information
+//   }
+// );
 
 module.exports = router;

@@ -14,10 +14,11 @@ import {
 
 import {
   GoogleSignin,
-  GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import {GOOGLE_CLIENT_ID, GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID} from "@env"
 
 export default function SignupScreen(props) {
   const [email, setEmail] = useState('');
@@ -25,12 +26,15 @@ export default function SignupScreen(props) {
 
   const [error, setError] = useState();
   const [userInfo, setUserInfo] = useState();
+  const [gEmail, setgEmail] = useState('');
 
   const configureGoogleSignin = () => {
     GoogleSignin.configure({
-      androidClientId: "13567678850-g0jo32j8dhj66e2nhj2l9o5sqqv3688u.apps.googleusercontent.com",
-      iosClientId: "13567678850-r5frkd4h1f59n8pv4tn37a45tdsfm007.apps.googleusercontent.com",
-      webClientId: "13567678850-oo19askh0so2hrs0rcl887ho1u4erhtj.apps.googleusercontent.com",
+      // webClientId: GOOGLE_CLIENT_ID,
+      androidClientId: GOOGLE_ANDROID_CLIENT_ID,
+      // iosClientId: GOOGLE_IOS_CLIENT_ID,
+      // forceCodeForRefreshToken: true,
+      // offlineAccess: true,
     });
   }
 
@@ -38,21 +42,68 @@ export default function SignupScreen(props) {
       configureGoogleSignin();
   }, []);
 
+  const sendGoogleSignup = async (googleEmail) => {
+    console.log("Start google-signup");
+    try {
+      const response = await fetch('http://10.0.2.2:3000/google-signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userInfo), // Ensure correct formatting here
+      });
+  
+      const data = await response.json();
+      
+      if (response.ok) {
+        console.log(`Success here your user ${data.googleEmail}`);
+        setgEmail(data.googleEmail);
+        props.navigation.replace('home');
+      } else {
+        console.error('Error in Google Sign-Up:', data.error || response.status);
+      }
+    } catch (error) {
+      console.log("ERROR");
+      console.error('Error in Google Sign-Up:', error);
+    }
+  };
+
   const signIn = async () => {
+    console.log("Google authentication")
       try {
+        console.log("Success Authentication")
         await GoogleSignin.hasPlayServices();
         const userInfo = await GoogleSignin.signIn();
         setUserInfo(userInfo);
         setError();
+        // sendGoogleSignup(userInfo.user.email);
+        console.log(userInfo.user)
+        console.log(`User email is ${userInfo.user.email}`) 
       } catch (error) {
-        setError(error);
+        if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+          // user cancelled the login flow
+          console.log('cancelled the login flow')
+        } else if (error.code === statusCodes.IN_PROGRESS) {
+          // operation (e.g. sign in) is in progress already
+          console.log('operation (e.g. sign in) is in progress already')
+        } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+          // play services not available or outdated
+          console.log('play services not available or outdated')
+        } else {
+          console.error('Unexpected error in Google Sign-In:', error);
+        }
       }
   };
 
+
   const logout = async () => {
-    setUserInfo(undefined);
-    GoogleSignin.revokeAccess()
-    GoogleSignin.signOut()
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      setUserInfo(null);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   const sendCred = async (props) => {
@@ -101,7 +152,7 @@ export default function SignupScreen(props) {
       </TouchableOpacity>
       
       <Text>{JSON.stringify(error)}</Text>
-      {userInfo ? (
+      {/* {userInfo ? (
        <View>
           <Button mode="contained" style={styles.button} onPress={logout}>
             Logout
@@ -112,18 +163,21 @@ export default function SignupScreen(props) {
           /> 
           <Text>{userInfo.user.givenName}</Text>
           <Text>{userInfo.user.familyName}</Text>
+          <Text>{gEmail}</Text>
       </View>
       ) : (
-        <GoogleSigninButton 
-          size={GoogleSigninButton.Size.Standard} 
-          color={GoogleSigninButton.Color.Dark} 
-          onPress={signIn}
-        />
-      // <Button mode="contained" style={styles.button} onPress={signIn}>
-      //   Sign up with google
-      // </Button>
-      )}
-      
+        <View>
+          {Platform.OS === 'web' ? (
+            <Button mode="contained" style={styles.button} onPress={signIn}>
+              Login with Google (Web)
+            </Button>
+          ) : (
+            <Button mode="contained" style={styles.button} onPress={signIn}>
+              Login with Google (Android)
+            </Button>
+          )}
+        </View>
+      )} */}
       <StatusBar style="auto" />
     </SafeAreaView>
   );

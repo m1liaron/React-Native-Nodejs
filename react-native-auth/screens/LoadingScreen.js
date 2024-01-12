@@ -11,14 +11,14 @@ import { Button } from 'react-native-paper';
 
 export default function LoadingScreen(props) {
 
-  const detectLogin = async () => {
-    const token = await AsyncStorage.getItem('token');
-      if (token) {
-        props.navigation.replace("home")
-      } else {
-        props.navigation.replace("login")
-      }
-  }
+  // const detectLogin = async () => {
+  //   // const token = await AsyncStorage.getItem('token');
+  //     if (token) {
+  //       props.navigation.replace("home")
+  //     } else {
+  //       props.navigation.replace("login")
+  //     }
+  // }
 
   useEffect(() => {
     detectLogin()
