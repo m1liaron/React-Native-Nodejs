@@ -19,7 +19,7 @@ export default function LoginScreen(props) {
   const [password, setPassword] = useState("");
 
   const sendCred = async (props)=>{
-    fetch("http://10.0.2.2:3000/signin",{
+    fetch("http://10.0.2.2:3000/login",{
       method:"POST",
       headers: {
        'Content-Type': 'application/json'
@@ -33,7 +33,7 @@ export default function LoginScreen(props) {
     .then(async (data)=>{
            try {
             //  await AsyncStorage.setItem('token',data.token)
-             props.navigation.replace("home")
+             props.navigation.replace("todo")
            } catch (e) {
              console.log("error hai",e)
               Alert(e)
@@ -66,7 +66,7 @@ export default function LoginScreen(props) {
         </Button>
         <TouchableOpacity>
            <Text
-            onPress={() => props.navigation.replace("signup")}
+            onPress={() => props.navigation.replace("register")}
            >
             Don't have an account?
            </Text>

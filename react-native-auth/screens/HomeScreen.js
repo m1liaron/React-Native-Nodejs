@@ -42,7 +42,8 @@ useEffect(()=>{
 
   return (
       <SafeAreaView style={styles.container}>
-            <Text>your email is {email}</Text>
+            <Text>Welcome to my app!</Text>
+            {/* <Text>your email is {email}</Text> */}
             <Button
               mode="contained"
               onPress={() => logout(props)}

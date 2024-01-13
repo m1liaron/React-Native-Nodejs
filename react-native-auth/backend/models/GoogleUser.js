@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 
 const googleUserSchema = new mongoose.Schema({
     googleId: {

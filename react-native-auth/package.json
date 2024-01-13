@@ -13,6 +13,7 @@
     "@react-native-google-signin/google-signin": "^11.0.0",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
+    "axios": "^1.6.5",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
@@ -44,8 +45,7 @@
     "react-native-safe-area-context": "^4.8.2",
     "react-native-screens": "~3.22.0",
     "react-native-vector-icons": "^10.0.3",
-    "react-native-web": "~0.19.6",
-    "uninstall": "^0.0.0"
+    "react-native-web": "~0.19.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
